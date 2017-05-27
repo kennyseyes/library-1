@@ -7,6 +7,7 @@
 #include <QDialog>
 #include <QMessageBox>
 
+
 namespace Ui {
 class login_user_dialog;
 }
@@ -19,6 +20,7 @@ public:
     explicit login_user_dialog(QWidget *parent = 0);
     ~login_user_dialog();
     bool judgeEmpty();
+
 
 signals:
     void send_bookhead(book* book_head);

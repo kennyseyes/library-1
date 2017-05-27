@@ -40,7 +40,7 @@ public:
         return ISBN;
     }
     string gettype();
-
+    void set_avil_num(int n);
     string getintro();
 
     string getin_time();

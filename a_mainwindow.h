@@ -27,6 +27,8 @@ private slots:
     void on_u_delete_clicked();
     
     void on_u_find_clicked();
+
+
     
 private:
     Ui::A_MainWindow *ui;

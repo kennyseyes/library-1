@@ -39,8 +39,10 @@ void login_user_dialog::on_login_Button_clicked()
         ui->pasw_lineEdit->clear();
         return;
     }
+
     QString input_password=ui->pasw_lineEdit->text();
     QString input_username=ui->uname_lineEdit->text();
+
 
     string id;
     string password=input_password.toStdString();
@@ -87,10 +89,11 @@ void login_user_dialog::on_login_Button_clicked()
     else if(success_id==1 && password.compare(temp->get_password())==0){
 
         user* client=temp;
-        QString str1="登录成功/n";
+        client->book_login();
+        QString str1="登录成功";
         QString str2= QString::fromStdString(temp->getname());
-        QString str3="\n欢迎使用美少女的图书管理系统";
-        QMessageBox::information(this,"提示",str3+str2+str1,QMessageBox::Yes);
+        QString str3="欢迎使用美少女的图书管理系统";
+        QMessageBox::information(this,"提示",str3+str2+"\n"+str1,QMessageBox::Yes);
         this->clearAll();
         u_MainWindow  *user_mainwindow=new u_MainWindow;
         user_mainwindow->show();

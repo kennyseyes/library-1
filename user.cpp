@@ -1,5 +1,5 @@
 #include "user.h"
-
+#include<QMessageBox>
 user::user()
 {
 
@@ -218,15 +218,87 @@ void user::order_book(book* target)
     else
         cout<<"预约失败"<<endl;
 }
-/*
-bool user::book_borrow(book* target)//将target放入借书链表,有头节点 targer指向书的指针，返回是否借书成功
+
+bool user::check_permission(user* client,int authority)
+///检查借书权限，传入用户书籍权限，返回1：可借，0：不可借
+{
+    if(client->get_type()==0)
+        return 1;
+    else
+    {
+        int permission=client->getpermission();
+        switch(permission)
+        {
+            case 0:///先写成了什么书都不能借
+                return 0;
+
+            case 1:
+                if(authority==0) return 1;
+                else return 0;
+
+            case 2:
+                if(authority<=1) return 1;
+                else return 0;
+
+            case 3:
+                if(authority<=2) return 1;
+                else return 0;
+
+            case 4:
+                if(authority<=3) return 1;
+                else return 0;
+
+            case 5:
+                if(authority<=1) return 1;
+                else return 0;
+        }
+    }
+
+    return -1;
+}
+
+bool user::check_credit(user* client,double price)
+///检查借书权限，传入用户信用等级、书籍价格，返回1：可借，0：不可借
+{
+    if(client->get_type()==0)
+        return 1;
+    else
+    {
+        int credit=client->getcredit();
+        switch(credit)
+        {
+            case 1:
+                if(price<10.00) return 1;
+                else return 0;
+
+            case 2:
+                if(price<30.00) return 1;
+                else return 0;
+
+            case 3:
+                if(price<50.00) return 1;
+                else return 0;
+
+            case 4:
+                if(price<60.00) return 1;
+                else return 0;
+
+            case 5:
+                return 1;
+          }
+
+    }
+    return -1;
+}
+
+int user::book_borrow(book* target)//将target放入借书链表,有头节点 targer指向书的指针，返回是否借书成功
 {
     if(check_permission(this,target->getauth())&&check_credit(this,target->getprice()) && target->getavil_number()!=0)//如果符合借书条件 且书还有剩余
     {
         book* newbook=new book;
         newbook->copybook(target);//newbook 独立出来了的
-        add_log(CLIENT_LOG,0,get_id(),newbook);//用户日志
-        add_log(BOOKS_LOG,0,get_id(),newbook);//图书日志
+       // add_log(CLIENT_LOG,0,get_id(),newbook);//用户日志
+        //add_log(BOOKS_LOG,0,get_id(),newbook);//图书日志
 
         book *temp;
         temp=borrowed;
@@ -237,6 +309,7 @@ bool user::book_borrow(book* target)//将target放入借书链表,有头节点 t
     }
     else if(target->getavil_number()==0)
     {
+        return 3;
         cout<<"抱歉，暂无库存。是否预约？1：是；0：否"<<endl;
         int n;
         cin>>n;
@@ -246,57 +319,30 @@ bool user::book_borrow(book* target)//将target放入借书链表,有头节点 t
             order_book(target);
         }
         else
-            return 0;
+            return 1;
     }
-    else
-    {
-        cout<<"抱歉，您不符合借书条件，请继续提高您的姿势水平。"<<endl;
-        return 0;
-    }
-    return 0;
+    else 
+        return 2;
+
 }
 
-string user::book_return()
+void user::book_return(int n)//n为要删除第几本书
 {
-    ///从用户借书链表中删除书籍
-    string book_id;
-    int n,i=1;
+    ///从用户借书链表中删除书籍删掉temp
     book* temp=borrowed->next;
-    cout<<"请选择需要归还的书籍，退出输入0"<<endl;
-    while(temp!=NULL && n!=0)
-    {
-        cout<<i<<"."<<temp->getname()<<endl;
-        temp=temp->next;
-        i++;
-    }
-    cin>>n;
+    book* pre=borrowed;
+    for(int i=0; i<n; i++)
+        pre=pre->next;
+    temp=pre->next;
 
-    while(n!=0)
-    {
-        while(n>i-1)
-        {
-            cout<<"输入不正确请重新输入！"<<endl;
-            cin>>n;
-        }
-
-        book* pre=borrowed;
-        for(i=1; i<n; i++)
-            pre=pre->next;
-        temp=pre->next;
-        book_id=temp->getid();
-        pre->next=temp->next;
-        add_log(CLIENT_LOG,1,get_id(),temp);//用户日志
-        add_log(BOOKS_LOG,1,get_id(),temp);//图书日志
-        temp->next=NULL;
-        delete temp;
-        n=0;
-        cout<<"还书成功！"<<endl;
-    }
-
-    return book_id;
+    pre->next=temp->next;
+    //  add_log(CLIENT_LOG,1,get_id(),temp);//用户日志
+ // add_log(BOOKS_LOG,1,get_id(),temp);//图书日志
+    temp->next=NULL;
+    delete temp;
     ///修改在链表中的书的状态
 
-}*/
+}
 int user::get_type()
 {
     return user_type;
@@ -325,6 +371,14 @@ int user::get_credit()
 {
     return credit;
 }
+int user::get_bookhand()
+{
+    return books_hand;
+}
+int user::get_expirenum()
+{
+    return expire_num;
+}
 double user::get_debt()
 {
     return debt;
@@ -340,6 +394,18 @@ int user:: getpermission()
 int user::getcredit()
 {
     return credit;
+}
+int user::getnumber()
+{
+    return book_number;
+}
+void user::setpassword(string s)
+{
+    password=s;
+}
+void user::setdebt(double d)
+{
+    debt=d;
 }
 
 void user::output()
@@ -366,14 +432,13 @@ void user::output()
     cout << "password：" << password << endl;
 }
 
-void user::book_login()//载入借过的书
+book* user::book_login()//载入借过的书
 {
-
     ifstream file;
     file.open("user_borrow.txt");
     string tmp,id_str,book_str,state_str;
-    book* add=this->borrowed;//添加借的书的指针
-
+    book* add=new book;///添加借的书的指针
+    book* add_head=add;
     while(!file.eof())
     {
         getline(file,tmp);
@@ -392,7 +457,7 @@ void user::book_login()//载入借过的书
             {
                 book* temp=new book;
                 temp->next=NULL;
-                book* head;
+                book* head=temp;
                 head=head->load_books();
                 book* searchptr=head;//searchptr用来找booklist中对应的书，也就是要复制给temp的书
                 while(searchptr!=NULL)
@@ -411,12 +476,13 @@ void user::book_login()//载入借过的书
                   while(findend->next!=NULL)
                       findend=findend->next;
                   findend->next=temp;*/
-
             }
         }
     }
-
+    add->next=NULL;
     file.close();
+    borrowed= add_head;
+    return add_head->next;
 }
 
 user* user:: load_user()///链表存储用户信息,头节点为空的链表存储
@@ -482,4 +548,57 @@ user* user:: load_user()///链表存储用户信息,头节点为空的链表存�
 
     userlist.close();
     return firstuser;
+}
+
+
+void user::save_book_return(string book)///将用户归还的书籍写入user_borrow.txt，已归还书籍参数为0
+{
+    cout<<"book:"<<book<<".."<<endl;
+    fstream ifs;
+    ifs.open("user_borrow.txt",ios_base::out|ios_base::in );
+    string tmp,id_str,book_str;//tmp用来存储每一行，id_str来存储每一行的用户名，用于匹配
+    int success=0;
+    int length=0;//使用length计数从而找到添加数据的指针位置
+
+    while(!ifs.eof() && success==0)
+    {
+        getline(ifs,tmp);
+        length+=tmp.length();
+
+
+        int pos=0,mark,n;
+        n=tmp.find_first_of(' ',pos);//n=第一个空格的位置
+        mark=tmp.find_first_of(' ',n+1);//mark=第二个空格位置
+
+        id_str=tmp.substr(n+1,8);
+        book_str=tmp.substr(mark+1,13);
+
+        if(id_str.compare(this->get_id())==0)//如果用户id和记录id一致
+        {
+            if(book_str.compare(book)==0)
+            {
+
+                ifs.seekg(length-1,ios::beg);///将状态改为0
+                ifs<<"0"<<endl;
+                success=1;
+            }
+        }
+        length+=2;
+    }
+    ifs.close();
+}
+
+
+void user::save_book_borrowed(book* target)///将用户借阅的书籍写入user.txt，1为被用户借走
+{
+    fstream ifs;
+    ifs.open("user_borrow.txt",ios_base::out|ios_base::in|ios::app);
+    int success=0;
+    while(!ifs.eof() && success==0)
+    {
+        ifs<<" "<<this->get_id()<<" "<<target->getid()<<" "<<1<<'\n';
+        success=1;
+    }
+
+    ifs.close();
 }

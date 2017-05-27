@@ -154,23 +154,6 @@ void book:: add_log(int type,int act_num,string u_id,book* b_book)
     fptr.close();
 }
 
-void book:: copybook(book* target)//将target拷贝给当前类
-{
-    ID=target->getid();//图书编号，需生成， XX（类型）XX（出版社）XXXXX（流水号）
-    name=target->getname();//书名
-    author=target->getauthor();//作者
-    publish=target->getpublish();//出版社
-    intro=target->getintro();//简介
-    in_time=target->getin_time();//购入时间
-    all_number=target->getall_number();//所有数量
-    avil_number=target->getavil_number();	//剩余数量
-    price=target->getprice();//定价
-    type=target->gettype();//类别
-    state=target->getstate();//状态（借出1，未借出0）
-    authority=target->getauth();//权限
-    ISBN=target->getISBN();//ISBN
-    next=NULL;
-}
 */
 
 void book:: copybook(book* target)//将target拷贝给当前类
@@ -190,6 +173,11 @@ void book:: copybook(book* target)//将target拷贝给当前类
        ISBN=target->getISBN();//ISBN
        next=NULL;
    }
+
+void book::set_avil_num(int n)
+{
+    avil_number=n;
+}
 
 bool book:: state_and_avil_change(int avil_number,string ID)   //修改txt中图书的剩余数量和状态，返回状态state
 {

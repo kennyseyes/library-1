@@ -1,6 +1,7 @@
 #ifndef CHANGE_PASSWORD_H
 #define CHANGE_PASSWORD_H
 
+#include "user.h"
 #include <QDialog>
 
 namespace Ui {
@@ -17,6 +18,9 @@ public:
 
 private slots:
     void on_pushButton_2_clicked();
+    void rece_curuser(user* cu);
+
+    void on_pushButton_clicked();
 
 private:
     Ui::change_password *ui;

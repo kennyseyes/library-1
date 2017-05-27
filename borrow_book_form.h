@@ -1,6 +1,7 @@
 #ifndef BORROW_BOOK_FORM_H
 #define BORROW_BOOK_FORM_H
-
+#include "book.h"
+#include "user.h"
 #include <QDialog>
 
 namespace Ui {
@@ -17,6 +18,10 @@ public:
 
 private slots:
     void on_pushButton_2_clicked();
+    void rece_bookhead(book * bh);
+    void rece_userhead(user* uh);
+    void rece_curuser(user* cu);
+    void on_pushButton_clicked();
 
 private:
     Ui::borrow_book_form *ui;

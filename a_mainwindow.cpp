@@ -13,6 +13,7 @@ A_MainWindow::~A_MainWindow()
     delete ui;
 }
 
+
 void A_MainWindow::on_b_add_clicked()
 {
 

@@ -5,6 +5,8 @@
 #include <change_password.h>
 #include <borrow_book_form.h>
 #include "user.h"
+#include <showbookfound.h>
+#include <QListWidgetItem>
 
 namespace Ui {
 class u_MainWindow;
@@ -18,6 +20,11 @@ public:
     explicit u_MainWindow(QWidget *parent = 0);
     ~u_MainWindow();
 
+signals:
+    void send_bookhead(book* book_head);
+    void send_userhead(user* user_head);
+    void send_curuser(user* cur_user);
+
 private slots:
     //void on_exit_clicked();
 
@@ -27,10 +34,31 @@ private slots:
     void rece_curuser(user* cu);
     void on_form_in_clicked();
 
+    void on_search_clicked();
+
+    void on_return_2_clicked();
+
+    void on_search_2_clicked();
+
+    void on_debt_clicked();
+
+    void on_permission_clicked();
+
+    void on_pushButton_clicked();
+
+    void on_showresult_itemDoubleClicked(QListWidgetItem *item);
+
+    void on_borrow_clicked();
+
+    void on_return_3_clicked();
+
+    void on_pay_clicked();
+
 private:
     Ui::u_MainWindow *ui;
     change_password *changepw;
     borrow_book_form *form;
+    showbookfound *showbook;
 
 };
 
