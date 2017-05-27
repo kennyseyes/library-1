@@ -15,11 +15,17 @@ u_MainWindow::~u_MainWindow()
 {
     delete ui;
 }
-\
+
 void u_MainWindow::on_form_in_clicked()
 {
     form=new borrow_book_form;
     form->show();
+}
+
+void u_MainWindow::on_changepw_clicked()
+{
+    changepw=new change_password;
+    changepw->show();
 }
 
 void u_MainWindow::rece_bookhead(book*bh){
@@ -42,9 +48,5 @@ void u_MainWindow::on_exit_clicked()
     accept();
 }
 */
-void u_MainWindow::on_changepw_clicked()
-{
-    changepw=new change_password;
-    changepw->show();
-}
+
 

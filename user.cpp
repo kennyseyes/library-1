@@ -45,6 +45,7 @@ void user:: init()//添加新用户
     expire= new book;
     next=NULL;
 }
+
 user::user(int user_type1,string name1, string id1, string passwd,string academy1,int permission1,int credit1,double debt1)
     {
         user_type = user_type1;
@@ -366,14 +367,13 @@ void user::output()
     cout << "password：" << password << endl;
 }
 
-void user::book_login()//载入借过的书
+book* user::book_login()//载入借过的书
 {
-
     ifstream file;
     file.open("user_borrow.txt");
     string tmp,id_str,book_str,state_str;
-    book* add=this->borrowed;//添加借的书的指针
-
+    book* add=new book;//添加借的书的指针
+    book* add_head=add;
     while(!file.eof())
     {
         getline(file,tmp);
@@ -392,7 +392,7 @@ void user::book_login()//载入借过的书
             {
                 book* temp=new book;
                 temp->next=NULL;
-                book* head;
+                book* head=temp;
                 head=head->load_books();
                 book* searchptr=head;//searchptr用来找booklist中对应的书，也就是要复制给temp的书
                 while(searchptr!=NULL)
@@ -411,12 +411,12 @@ void user::book_login()//载入借过的书
                   while(findend->next!=NULL)
                       findend=findend->next;
                   findend->next=temp;*/
-
             }
         }
     }
-
+    add->next=NULL;
     file.close();
+    return add_head->next;
 }
 
 user* user:: load_user()///链表存储用户信息,头节点为空的链表存储
@@ -483,3 +483,104 @@ user* user:: load_user()///链表存储用户信息,头节点为空的链表存�
     userlist.close();
     return firstuser;
 }
+
+user* user:: search_user(user* head, string types,int type)//查找：传入用户链表，返回搜寻到的用户
+{
+    user* cur_u=new user;
+    cur_u->next=cur_u;//构造环形链表
+    user* temp=head;
+    user* head_u=cur_u;
+    while(temp!=NULL)
+    {
+       if(type==0&&temp->getname()==types)
+       {
+           user *nex_u=new user;
+           cur_u->next=nex_u;
+           nex_u->copyuser(temp);
+           cur_u=cur_u->next;
+       }
+       else if(type==1 && temp->get_id()==types){
+           user *nex_u=new user;
+           cur_u->next=nex_u;
+           nex_u->copyuser(temp);
+           cur_u=cur_u->next;
+       }
+       temp=temp->next;
+    }
+    cur_u->next=head_u;//环形链表方便列表
+
+    if(head_u->next==head_u){
+       return NULL;
+    }
+    else return head_u->next;
+}
+
+int user:: new_user(user* user_head,string newuser_id, string newuser_name, string newuser_academy, int newuser_type)
+{
+    int model=0;
+    fstream userlist;
+    userlist.open("user.txt",ios::app|ios::in|ios::out);
+    user* temp=user_head->next;
+    int permision;
+   string password ="00000000";
+   int credit=5;
+   double pay=0.0;
+    while(temp!=NULL){
+        if(temp->get_id()==newuser_id && temp->get_type()==newuser_type) model=1;
+        temp=temp->next;
+    }
+    if(model==0){
+        if(newuser_type==0) permision=4;
+        else permision=5;
+        userlist<<newuser_type<<' '<<newuser_name<<' '<<newuser_id<<' '<<"00000000 "<<newuser_academy<<" "<<permision<<" "<<"5 "<<"00.00 "<<endl;
+    }
+
+    user target(newuser_type, newuser_name, newuser_id, password, newuser_academy, permision , credit, pay);
+    user *target1 = new user;
+    target1->copyuser(&target);
+
+    for(temp=user_head->next; temp->next!=NULL; temp=temp->next);
+
+    temp->next=target1;
+    target1->next=NULL;
+
+    userlist.close();
+    return model;
+}
+
+void user::delete_user(user* head, user* destination,bool is_all)
+{
+    fstream updatauserlist;
+    updatauserlist.open("user.txt",ios::out|ios::out);
+    user* temp=head->next;
+    user* pre=temp;
+    user* del;
+   updatauserlist << "（用户类型老师0学生1 姓名 证件号 密码 学院 权限 信用等级 欠款（注意：欠款00.00后有英文空格）" << endl;
+    while(temp!=NULL)
+    {
+        if(temp->getname()==destination->getname() && temp->get_id()==destination->get_id()&&temp->get_type()==destination->get_type())
+        {
+            pre->next=temp->next;
+            del=temp;
+            temp=temp->next;
+            if(is_all && destination->next!=NULL) destination=destination->next;
+            delete del;
+            del=NULL;
+        }
+        else
+        {
+            if(temp->get_debt()<10)
+            {
+                updatauserlist<<temp->get_type()<<" "<<temp->getname()<<" "<<temp->get_id()<<" "<<temp->get_password()<<" "<<temp->get_academy()<<" "<<temp->get_permission()<<" "<<temp->get_credit()<<" 0"<<setiosflags(ios::fixed)<<setprecision(2)<<temp->get_debt()<<" "<<endl;
+            }
+            else
+            {
+                updatauserlist<<temp->get_type()<<" "<<temp->getname()<<" "<<temp->get_id()<<" "<<temp->get_password()<<" "<<temp->get_academy()<<" "<<temp->get_permission()<<" "<<temp->get_credit()<<" "<<setiosflags(ios::fixed)<<setprecision(2)<<temp->get_debt()<<" "<<endl;
+            }
+            pre=temp;
+            temp=temp->next;
+        }
+    }
+    updatauserlist.close();
+}
+

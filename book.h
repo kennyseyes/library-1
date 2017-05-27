@@ -72,6 +72,8 @@ public:
 
    book* load_books();
 
+   book* add_books(book * book_head, string _name,string _author,string _publish, float _price,string _type,string _ISBN, int _authority,string _intro,int number);
+
     ~book(); //虚构函数：便于销毁申请的动态内存
 private:
     string ID;//图书编号，需生成， XX（类型）XX（出版社）XXXXX（流水号）

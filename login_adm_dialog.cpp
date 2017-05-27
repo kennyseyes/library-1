@@ -1,6 +1,7 @@
 #include "login_adm_dialog.h"
 #include "ui_login_adm_dialog.h"
 #include<QMessageBox>
+
 login_adm_dialog::login_adm_dialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::login_adm_dialog)
@@ -18,7 +19,7 @@ void login_adm_dialog::on_ok_Button_clicked()
 {
     i--;
     QString input_password=ui->lineEdit->text();
-    if(input_password==tr("123456")) {
+    if(input_password==tr("1")) {
         admin_mainwindow.show();
         this->close();
     }

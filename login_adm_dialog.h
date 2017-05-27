@@ -2,9 +2,9 @@
 #define LOGIN_ADM_DIALOG_H
 
 #include "a_mainwindow.h"
-
 #include <QDialog>
 #include <QMessageBox>
+
 namespace Ui {
 class login_adm_dialog;
 }

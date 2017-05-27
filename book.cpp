@@ -1,5 +1,7 @@
- #include "book.h"
-
+#include "book.h"
+#include "intopinyin.h"
+#include "utf-8_into_gb2132.h"
+#define len 3
 book::book()
 {
 
@@ -403,4 +405,120 @@ book* book:: load_books()//载入书籍
     booklist.close();
     return firstbook;
 }
+
+book* book::add_books(book * book_head, string _name,string _author, string _publish, float _price,string _type,string _ISBN, int _authority,string _intro,int num)
+{
+    fstream booklist;
+    booklist.open("book_storage.txt",ios::app|ios::in|ios::out);
+    book *temp = book_head ; //获取链表头结点
+    book *cur_book = new book;
+    while( temp -> next != NULL )
+    {
+        temp = temp -> next ;
+    }
+
+    string pre_id = temp->getid();
+
+    ///构建当前流水号
+    int i; //i:计数－
+    i=(int)pre_id.find_first_of('-', 0);
+    i=(int)pre_id.find_first_of('-', i+1);
+    int pre_id_int=atoi(pre_id.substr(i+1,5).c_str());
+    int cur_id_int=pre_id_int+1;
+    string cur_id_s;
+    string empty_in;
+    if(cur_id_int<10){
+       empty_in="0000";
+    }
+    else if(10<=cur_id_int &&cur_id_int<100){
+        empty_in="000";
+    }
+    else if(100<=cur_id_int &&cur_id_int<1000){
+        empty_in="00";
+    }
+    else if(1000<=cur_id_int &&cur_id_int<10000){
+        empty_in="0";
+    }
+
+    //将int转化为string
+    stringstream stream;
+    stream<<cur_id_int;
+    cur_id_s=stream.str();
+
+    empty_in=empty_in+cur_id_s;
+    cur_id_s=empty_in;
+
+    ///汉字转拼音
+    //出版社:只选取前4个字符，不足四个补'V'
+    int pos=0;
+
+    const char* first_ch=_publish.substr( pos, 4*len).c_str();
+    string utf_fi(first_ch);
+    utf8ToGb2312(utf_fi);
+    first_ch=utf_fi.c_str();
+    char *py1=CellConvertHZToPY( first_ch);
+    string s1(py1);
+    free(py1);
+
+    gb2312ToUtf8(s1);
+    int pos1=0;
+
+    const char* first_ty=_type.substr( pos1, 2*len).c_str();
+    string utf_t1(first_ty);
+    utf8ToGb2312(utf_t1);
+    first_ty=utf_t1.c_str();
+    char* ty1=CellConvertHZToPY(first_ty);
+    string tt1(ty1);
+    free(ty1);
+    gb2312ToUtf8(tt1);
+
+    string cur_id;
+    cur_id=tt1+'-'+s1+'-'+cur_id_s;
+
+    cur_book->ID=cur_id;
+    cur_book->author=_author;
+    cur_book->name=_name;
+    cur_book->intro=_intro;
+    cur_book->publish= _publish;
+    cur_book->ISBN=_ISBN;
+    cur_book->state=1;
+    cur_book->price=_price;
+    cur_book->type=_type;
+    cur_book->avil_number=num;
+    cur_book->authority=_authority;
+    //cur_book->in_time
+
+    temp=book_head->next;
+    book* pre=temp;
+    while(temp!=NULL)
+    {
+        if(temp->ISBN==_ISBN) break;
+        pre=temp;
+        temp=temp->next;
+    }
+
+    if(temp!=NULL)
+    {
+        temp->all_number+=num;
+        if(!temp->state)
+        {
+            temp->state=1;
+            temp->avil_number=num;
+            //temp->in_time;
+        }
+        delete cur_book;
+        booklist.close();
+        return temp;
+    }
+    else{
+        pre->next=cur_book;
+      /*  cout << "作者:" << _author << " 出版社：" << _publish << _publish1 << "ISBN:" << _ISBN << " 权限："<< _authority << endl;
+                c << "购入时间:" << _date << " 所有数量:" << _all << " 定价:" << _price << " 类别:" << _type << _type1 << endl;
+                cout << "图书简介："<< _intro << endl << endl;*/
+        booklist.close();
+        return cur_book;
+    }
+}
+
+
 

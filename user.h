@@ -61,10 +61,15 @@ public:
 
     void output();
 
-    void book_login();//载入借过的书
+    book *book_login();//载入借过的书
 
     user* load_user();
 
+    int new_user(user* user_head,string newuser_id, string newuser__name, string newuser__academy, int newuser__type);
+
+    user* search_user(user* head, string username, int type);//查找：传入用户链表，返回搜寻到的用户
+
+    void delete_user(user* head, user* destinaton,bool is_all);
 private:
     int user_type;//老师0学生1
     string id;//学号/工作证
