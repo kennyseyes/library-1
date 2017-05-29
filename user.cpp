@@ -212,8 +212,8 @@ void user::order_book(book* target)
         if(calendar.tm_mon<9) f<<"0"<<calendar.tm_mon+1<<"-";
         else f<<calendar.tm_mon+1<<"-";
         if(calendar.tm_mday<9) f<<"0"<<calendar.tm_mday<<"]: ";
-        else f<<calendar.tm_mday<<"]: ";
-        f<<get_id()<<" "<<target->getid()<<'\n';*/
+        else f<<calendar.tm_mday<<"]: ";*/
+        f<<" "<<get_id()<<" "<<target->getid()<<' '<<'1'<<'\n';
     }
     else
         cout<<"预约失败"<<endl;

@@ -35,7 +35,8 @@ private slots:
 
 private:
     Ui::login_user_dialog *ui;
-
+    u_MainWindow u;
+    login_user_dialog *loginu;
 };
 
 #endif // LOGIN_USER_DIALOG_H

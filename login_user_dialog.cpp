@@ -98,6 +98,7 @@ void login_user_dialog::on_login_Button_clicked()
         u_MainWindow  *user_mainwindow=new u_MainWindow;
         user_mainwindow->show();
 
+
         connect(this,SIGNAL(send_bookhead(book *)),user_mainwindow,SLOT(rece_bookhead(book *)));
         // dlg->setModal(true); 不论是模态或者非模态都可以正常传值
         emit(send_bookhead(book_head));
@@ -106,6 +107,9 @@ void login_user_dialog::on_login_Button_clicked()
         connect(this,SIGNAL(send_curuser(user *)),user_mainwindow,SLOT(rece_curuser(user *)));
         emit(send_curuser(client));
         this->hide();
+
+
+
         return;
     }
 }

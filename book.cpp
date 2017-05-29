@@ -182,7 +182,7 @@ void book::set_avil_num(int n)
 bool book:: state_and_avil_change(int avil_number,string ID)   //修改txt中图书的剩余数量和状态，返回状态state
 {
     fstream booklist;
-    booklist.open("user_borrow.txt",ios::binary|ios::out|ios::in);
+    booklist.open("book_storage.txt",ios::binary|ios::out|ios::in);
     string s;
     int length=0;//使用length计数从而找到添加数据的指针位置
 

@@ -54,11 +54,26 @@ private slots:
 
     void on_pay_clicked();
 
+    void on_exit_clicked();
+
+    void on_reserve_clicked();
+
+    void on_search_3_clicked();
+
+    void on_showresult_2_itemClicked(QListWidgetItem *item);
+
+    void on_reserve_2_clicked();
+
+    void on_cancel_clicked();
+
+    void on_showbook_itemDoubleClicked(QListWidgetItem *item);
+
 private:
     Ui::u_MainWindow *ui;
     change_password *changepw;
     borrow_book_form *form;
     showbookfound *showbook;
+
 
 };
 

@@ -30,7 +30,6 @@ SOURCES += main.cpp\
     borrow_book_form.cpp \
     book.cpp \
     user.cpp \
-    search_book.cpp \
     showbookfound.cpp
 
 HEADERS  += \
@@ -43,7 +42,6 @@ HEADERS  += \
     borrow_book_form.h \
     user.h \
     book.h \
-    search_book.h \
     showbookfound.h
 
 FORMS    += \

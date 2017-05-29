@@ -55,6 +55,7 @@ void borrow_book_form::on_pushButton_clicked()
                         temp->set_avil_num(temp->getavil_number()-1);
                         temp->state_and_avil_change(temp->getavil_number(),temp->getid());
                         client1->save_book_borrowed(temp);
+
                         break;
                     }
                     else{}
